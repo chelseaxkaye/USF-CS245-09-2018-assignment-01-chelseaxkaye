@@ -13,9 +13,11 @@ public class HybridSort implements SortingAlgorithm{
 		//calls makesRuns so that we have an array consisting of only runs
 		runsize = 10;
 		makesRuns(runsize);
-		while (runs != 1) {
-			// merge();
-			runs = runs / 2;
+
+		//now that there is an arraylist with mini temp arrays that are runs
+		//merge them so that there is only one run
+		for (int[] i: runslist) {
+			merge(i[])
 		}
 	}
 
@@ -71,20 +73,23 @@ public class HybridSort implements SortingAlgorithm{
 			//used to keep the index to put back values
 			int back = i;
 
-			boolean isRun = false;
+			boolean up = true;
 
 			//find if there are runs or non-runs
-			while (!isRun) {
-				while (current - start <= runsize) {
-					
-					while (arr[i] <= arr[i + 1]) {
-						i++;
-						current++;
-					}
+			if (arr[i] <= arr[i + 1]) {
+				while (arr[i] <= arr[i + 1]) {
+					i++;
+					current++;
 				}
-
 			}
-			
+
+			else if (arr[i] >= arr[i + 1]) {
+				while (arr[i] >= arr[i + 1]) {
+					i++;
+					current++;
+				}
+				up = false;
+			}	
 
 			//create temp array for non-run values
 			double[] temp = new double[start - current];
@@ -96,15 +101,16 @@ public class HybridSort implements SortingAlgorithm{
 			}
 
 			//sort if not a run
-			if (current - start <= runsize) {
+			if (current - start <= runsize || up == false) {
 				//sort temp array using insertion
 				insertionsort(temp);
-
-				//replace with sorted values in the original array
-				// for (int k = 0; back <= i; k++) {
-				// 	arr[back++] = temp[k];	
-				// }
 			}
+			
+			// replace with sorted values in the original array
+			for (int k = 0; back <= i; k++) {
+				arr[back++] = temp[k];	
+			}
+			
 
 			//add mini arrays to arraylist
 			runslist.add(temp);
