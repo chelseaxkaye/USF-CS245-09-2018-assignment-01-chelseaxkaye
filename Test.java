@@ -7,14 +7,14 @@ import java.util.Random;
 
 public class Test {
 
-	protected double[] arr;
+	protected int[] arr;
 	protected String populationStrategy;
 	protected SortingFactory factory;      // This creates different sorting algorithms.
 	protected String [] algorithms = {"mergesort", "hybridsort"}; // Algos to use.
 
 	public Test() {
 		populationStrategy = "random";
-		createArray(100);
+		createArray(10000);
 		factory = new SortingFactory(false);
 	}
 
@@ -32,7 +32,7 @@ public class Test {
 
 	//creates test array
 	protected void createArray(int size) {
-		arr = new double[size];
+		arr = new int[size];
 		populateArray();
 	}
 
@@ -41,15 +41,12 @@ public class Test {
 		createArray(newSize);
 	}
 
-	//populates array with random doubles
+	//populates array with random integers
 	protected void populateArray() {
 		if (populationStrategy.contains("increasing")) {
 			populateArrayIncreasing();
 		}
-
-		else {
-			populateArrayRandomly();
-		}
+		populateArrayRandomly();
 	}
 
 	protected void populateArrayIncreasing() {
@@ -62,14 +59,14 @@ public class Test {
 	}
 
 	protected void populateArrayRandomly() {
-		// Random r = new Random();
+		Random r = new Random();
 		for (int i = 0; i < arr.length; i++) {
-			// arr[i] = r.nextDouble();
-			arr[i] = 1.0;
+			arr[i] = r.nextInt(10);
+	
 		}
 	}
 	//checks if array is sorted
-	protected boolean isSorted(double[] arr) {
+	protected boolean isSorted(int[] arr) {
 		for (int i = 0; i < arr.length-1; i++) {
 			if (arr[i] > arr[i+1])
 				return false;
@@ -87,7 +84,7 @@ public class Test {
 	}
 
 	//prints the array and if sorted; accepts parameter
-	public void printStatus(double[] arr) {
+	public void printStatus(int[] arr) {
 		System.out.print(arr.length + "\t");
 		if (isSorted(arr))
 			System.out.println("[OK]");
@@ -96,8 +93,8 @@ public class Test {
 	}
 
 	//makes a copy of array
-	public double[] copyArray() {
-		double[] copy = new double[arr.length];
+	public int[] copyArray() {
+		int[] copy = new int[arr.length];
 		System.arraycopy(arr, 0, copy, 0, arr.length);
 		return copy;
 	}
@@ -113,7 +110,7 @@ public class Test {
 				System.out.print(algo + "\t");
 				// For each algorithm:
 				// a) Copy the array
-				double[] copy = copyArray();
+				int[] copy = copyArray();
 				// b) Have the algorithm sort the copy ... while timing it.
 				long start = System.currentTimeMillis();
 				sort.sort(copy);
@@ -138,7 +135,7 @@ public class Test {
 		
 		Test timing = new Test();
 		// int [] sizes = {50000, 100000};
-		int[] sizes = {500, 1000};
+		int[] sizes = {20};
 
 		for (int size : sizes) {
 			timing.changeArraySize(size);

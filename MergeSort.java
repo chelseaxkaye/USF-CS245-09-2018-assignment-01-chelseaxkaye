@@ -1,16 +1,16 @@
 public class MergeSort implements SortingAlgorithm {
 
-	public void sort(double[] a) {
+	public void sort(int[] a) {
 		mergesort(a, 0, a.length - 1);
 	}
 
-	public void merge(double[] a, int l, int m, int r) {
+	public void merge(int[] a, int l, int m, int r) {
 		int leftlength = m - l + 1;
 		int rightlength = r - m;
 
 		//create new arrays
-		double[] L = new double[leftlength];
-		double[] R = new double[rightlength];
+		int[] L = new int[leftlength];
+		int[] R = new int[rightlength];
 
 		//copy to temp arrays
 		for (int k = 0; k < leftlength; k++) {
@@ -43,7 +43,7 @@ public class MergeSort implements SortingAlgorithm {
 		}
 	}
 
-	public void mergesort(double[] a, int left, int right) {
+	public void mergesort(int[] a, int left, int right) {
 		if (left < right) {
 			int mid = (left + right) / 2;
 			mergesort(a, left, mid);

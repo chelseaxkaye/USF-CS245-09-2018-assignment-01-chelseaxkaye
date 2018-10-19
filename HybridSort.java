@@ -1,30 +1,21 @@
 import java.util.*;
+import java.lang.*;
 /*
-* Class that uses a hybrid of insertion and merge to sort an array of random doubles
+* Class that uses a hybrid of insertion and merge to sort an array of random integers
 */
-public class HybridSort implements SortingAlgorithm{
+public class HybridSort implements SortingAlgorithm {
 
-	private int runs;
-	private double[] arr;
-	private int runsize;
-	protected ArrayList<double[]> runslist = new ArrayList<double[]>();
-
-	public void sort(double[] arr) {
-		//calls makesRuns so that we have an array consisting of only runs
-		runsize = 10;
-		makesRuns(runsize);
-
-		//now that there is an arraylist with mini temp arrays that are runs
-		//merge them so that there is only one run
-		for (int[] i: runslist) {
-			merge(i[])
-		}
+	public void sort(int[] a) {
+		// for (int i : a) {
+		// 	System.out.println(i);
+		// }
+		int runsize = 3;
+		hybrid(a, runsize);
 	}
 
-	//insertion sort
-	public void insertionsort(double[] a) {
+	public void insertionsort(int[] a) {
 		for(int i = 1; i < a.length; i++) {
-			double temp = a[i];
+			int temp = a[i];
 			int k = i - 1;
 			while (k >= 0 && a[k] > temp) {
 				a[k + 1] = a[k];
@@ -34,86 +25,189 @@ public class HybridSort implements SortingAlgorithm{
 		}
 	}
 
+	public void insertionhelp(int[] a, int l, int h){
+		int curr = l;
+        int len = h - l + 1;
+        int[] temp = new int[len];
+
+        for(int i = 0; i < len; i++){
+            temp[i] = a[l++];
+        }
+
+        insertionsort(temp);
+
+        for(int k = 0; curr <= h; k++){
+            a[curr++] = temp[k];
+        }
+
+    }
 	//merge sort
-	public void merge(double[] a, double[] b, double[] c) {
+	public void merge(int[] a, int[] l, int[] r, int i) {
+
 		int left = 0;
 		int right = 0; 
-		int target = 0;
 
 		//merge two arrays
-		while (left < a.length && right < b.length) {
-			if (a[left] <= b[right]) {
-				c[target++] = a[left++];
+		while (left < l.length && right < r.length) {
+			if (l[left] <= r[right]) {
+				a[i++] = l[left++];
 			}
 			else {
-				c[target++] = b[right++];
+				a[i++] = r[right++];
 			}
 		}
 		
 		//copy left over elements
-		while(left < a.length){
-			c[target++] = a[left++];
+		while(left < l.length){
+			a[i++] = l[left++];
 		}
-		while(right < b.length){
-			c[target++] = b[right++];
+		while(right < r.length){
+			a[i++] = r[right++];
 		}
 	}
 
+	public int[] sub(int[] a, int l, int h){
+        int len = h - l + 1;
+        int[] temp = new int[len];
+
+        for(int i = 0; i < len; i++){
+            temp[i] = a[l++];
+        }
+
+        return temp;
+    }
+
 	//iterate through the array and sort so that it only consists of runs of different sizes
-	public void makesRuns(int runsize) {
+	public void hybrid(int[] a, int runsize) {
+
+		HashMap<Integer, Integer> rl = new HashMap<>();
+
+		int start = 0;
+		int end = 0;
+
 		//iterate to find runs and runsizes
-		for (int i = 0; i < arr.length; i++) {
+		for (int i = 0; i < a.length; i++) {
 
-			//restarts every run;
-			int current = 0;
+			if (i == 0) {
+				start = 0;
+			}
+		
+			else if (i != a.length - 1) {
+				if (a[i] <= a[i + 1] && a[i] <= a[i - 1]) {
+					start = i;
+				}
+			}
 
-			//increments to populate temp array
-			int start = i;
-
-			//used to keep the index to put back values
-			int back = i;
-
-			boolean up = true;
+			// System.out.println("this: " + i);
+			
 
 			//find if there are runs or non-runs
-			if (arr[i] <= arr[i + 1]) {
-				while (arr[i] <= arr[i + 1]) {
-					i++;
-					current++;
+			if (i == 0) {
+				if (a[i] >= a[i + 1]) {
+					end = 0;
 				}
 			}
-
-			else if (arr[i] >= arr[i + 1]) {
-				while (arr[i] >= arr[i + 1]) {
-					i++;
-					current++;
+			if (i == a.length - 1) {
+				if (a[i] >= a[i - 1]) {
+					end = i;
 				}
-				up = false;
-			}	
-
-			//create temp array for non-run values
-			double[] temp = new double[start - current];
-
-			//populate temp array
-			for (int j = 0; start <= i; j++) {
-				temp[j] = arr[start];
-				start++;
 			}
-
-			//sort if not a run
-			if (current - start <= runsize || up == false) {
-				//sort temp array using insertion
-				insertionsort(temp);
+			else if (i != 0) {
+				if((a[i] >= a[i + 1] && a[i] >= a[i - 1])) {
+					end = i;
+				}
 			}
-			
-			// replace with sorted values in the original array
-			for (int k = 0; back <= i; k++) {
-				arr[back++] = temp[k];	
+			if (end - start + 1 >= runsize) {
+				rl.put(start, end);
 			}
-			
+		}
+		System.out.println(rl);
 
-			//add mini arrays to arraylist
-			runslist.add(temp);
+		if (rl.size() != 0) {
+
+			int l = 0;
+			int h;
+
+			for (int j = 0; j < a.length; j++) {
+                if(j == 0 && rl.containsKey(j)){
+
+                    l = rl.get(j) + 1;
+                }
+                else if (rl.containsKey(j) && ((j != 0) || j != a.length - 1)) {
+                    h = j - 1;                          
+                    rl.put(l, h);
+                    insertionhelp(a, l, h);
+                    l = rl.get(j) + 1;
+                    if (rl.containsKey(l)) {                 
+                        j = rl.get(l);  
+                    } else {
+                        j = l;                               
+                    }
+                } else if (j == a.length - 1) {
+                    rl.put(l, j);
+                    insertionhelp(a, l, j);
+                }
+            }
+		}
+		else if (rl.size() == 0){
+
+			for (int k = 0; k < a.length; k++)
+				rl.put(k, k);
+
+		}
+
+		if (!rl.containsKey(a.length - 1) && !rl.containsValue(a.length - 1)) {
+			rl.put(a.length - 1, a.length - 1);
+		}
+
+		while (rl.size() != 1) {
+			for (int p = 0; p < a.length; p++) {
+				int[] first;
+				int[] second;
+
+				int current = p;
+				int fL = 0;
+				int lL = 0;
+				int fR = 0; 
+				int lR = 0;
+
+				if (rl.size() != 1 && rl.size() <= 3) {
+					fL = 0;
+					lL = rl.get(fL) + 1;
+					first = sub(a, fL, lL - 1);
+
+					fR = lL;
+					lR = rl.get(fR) + 1;
+					second = sub(a, fR, lR - 1);
+
+					rl.remove(fR);
+					rl.put(fL, lR - 1);
+					merge(a, first, second, 0);
+
+				}
+				else if (rl.size() != 1) {
+					if (rl.containsKey(p)) {
+						fL = p;
+						lL = rl.get(p);
+						p = rl.get(p) + 1;
+					}
+
+					first = sub(a, fL, lL);
+
+					if (rl.containsKey(p)) {
+						fR = p;
+						lR = rl.get(p);
+						p = rl.get(p);
+
+						second = sub(a, fR, lR);
+
+						rl.remove(fR);
+						rl.put(fL, lR);
+						merge(a, first, second, p);
+					}
+				}
+
+			}
 		}
 	}
 }
