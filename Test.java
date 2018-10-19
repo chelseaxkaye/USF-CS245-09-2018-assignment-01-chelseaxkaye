@@ -134,8 +134,8 @@ public class Test {
 	public static void main(String[] args) {
 		
 		Test timing = new Test();
-		// int [] sizes = {50000, 100000};
-		int[] sizes = {20};
+		int [] sizes = {50000, 100000};
+		// int[] sizes = {20, 40, 50};
 
 		for (int size : sizes) {
 			timing.changeArraySize(size);

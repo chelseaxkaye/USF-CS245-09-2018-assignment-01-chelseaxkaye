@@ -97,8 +97,6 @@ public class HybridSort implements SortingAlgorithm {
 					start = i;
 				}
 			}
-
-			// System.out.println("this: " + i);
 			
 
 			//find if there are runs or non-runs
@@ -121,7 +119,6 @@ public class HybridSort implements SortingAlgorithm {
 				rl.put(start, end);
 			}
 		}
-		System.out.println(rl);
 
 		if (rl.size() != 0) {
 
@@ -129,10 +126,10 @@ public class HybridSort implements SortingAlgorithm {
 			int h;
 
 			for (int j = 0; j < a.length; j++) {
-                if(j == 0 && rl.containsKey(j)){
-
+        		if(j == 0 && rl.containsKey(j)){
                     l = rl.get(j) + 1;
                 }
+
                 else if (rl.containsKey(j) && ((j != 0) || j != a.length - 1)) {
                     h = j - 1;                          
                     rl.put(l, h);
@@ -143,14 +140,14 @@ public class HybridSort implements SortingAlgorithm {
                     } else {
                         j = l;                               
                     }
-                } else if (j == a.length - 1) {
+                } 
+                else if (j == a.length - 1) {
                     rl.put(l, j);
                     insertionhelp(a, l, j);
                 }
             }
 		}
 		else if (rl.size() == 0){
-
 			for (int k = 0; k < a.length; k++)
 				rl.put(k, k);
 
@@ -162,14 +159,15 @@ public class HybridSort implements SortingAlgorithm {
 
 		while (rl.size() != 1) {
 			for (int p = 0; p < a.length; p++) {
-				int[] first;
-				int[] second;
 
 				int current = p;
 				int fL = 0;
 				int lL = 0;
 				int fR = 0; 
 				int lR = 0;
+
+				int[] first;
+				int[] second;
 
 				if (rl.size() != 1 && rl.size() <= 3) {
 					fL = 0;
@@ -203,7 +201,7 @@ public class HybridSort implements SortingAlgorithm {
 
 						rl.remove(fR);
 						rl.put(fL, lR);
-						merge(a, first, second, p);
+						merge(a, first, second, current);
 					}
 				}
 
