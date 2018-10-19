@@ -6,13 +6,11 @@ import java.lang.*;
 public class HybridSort implements SortingAlgorithm {
 
 	public void sort(int[] a) {
-		// for (int i : a) {
-		// 	System.out.println(i);
-		// }
 		int runsize = 10;
 		hybrid(a, runsize);
 	}
 
+	//insertion sort
 	public void insertionsort(int[] a) {
 		for(int i = 1; i < a.length; i++) {
 			int temp = a[i];
@@ -25,6 +23,7 @@ public class HybridSort implements SortingAlgorithm {
 		}
 	}
 
+	//replace with sorted after insertion
 	public void insertionhelp(int[] a, int l, int h){
 		int curr = l;
         int len = h - l + 1;
@@ -41,6 +40,7 @@ public class HybridSort implements SortingAlgorithm {
         }
 
     }
+
 	//merge sort
 	public void merge(int[] a, int[] l, int[] r, int i) {
 
@@ -66,6 +66,7 @@ public class HybridSort implements SortingAlgorithm {
 		}
 	}
 
+	//makes copy of sub arrays
 	public int[] sub(int[] a, int l, int h){
         int len = h - l + 1;
         int[] temp = new int[len];
@@ -80,41 +81,25 @@ public class HybridSort implements SortingAlgorithm {
 	//iterate through the array and sort so that it only consists of runs of different sizes
 	public void hybrid(int[] a, int runsize) {
 
+		//hashmap to keep track of indeces of runs
 		HashMap<Integer, Integer> rl = new HashMap<>();
 
 		int start = 0;
 		int end = 0;
 
-		//iterate to find runs and runsizes
+		//iterate to find runs and non runs
 		for (int i = 0; i < a.length; i++) {
 
-			if (i == 0) {
-				start = 0;
-			}
-		
-			else if (i != a.length - 1) {
-				if (a[i] <= a[i + 1] && a[i] <= a[i - 1]) {
-					start = i;
-				}
-			}
+			start = i;
 			
-
-			//find if there are runs or non-runs
 			if (i == 0) {
-				if (a[i] >= a[i + 1]) {
-					end = 0;
-				}
+				end = 0;
 			}
-			if (i == a.length - 1) {
-				if (a[i] >= a[i - 1]) {
-					end = i;
-				}
+
+			else {
+				end = i;
 			}
-			else if (i != 0) {
-				if((a[i] >= a[i + 1] && a[i] >= a[i - 1])) {
-					end = i;
-				}
-			}
+
 			if (end - start + 1 >= runsize) {
 				rl.put(start, end);
 			}
@@ -137,17 +122,18 @@ public class HybridSort implements SortingAlgorithm {
                     l = rl.get(j) + 1;
                     if (rl.containsKey(l)) {                 
                         j = rl.get(l);  
-                    } else {
+                    } 
+                    else {
                         j = l;                               
                     }
                 } 
-                else if (j == a.length - 1) {
+                else {
                     rl.put(l, j);
                     insertionhelp(a, l, j);
                 }
             }
 		}
-		else if (rl.size() == 0){
+		else {
 			for (int k = 0; k < a.length; k++)
 				rl.put(k, k);
 
@@ -157,6 +143,7 @@ public class HybridSort implements SortingAlgorithm {
 			rl.put(a.length - 1, a.length - 1);
 		}
 
+		//start merging
 		while (rl.size() != 1) {
 			for (int p = 0; p < a.length; p++) {
 
@@ -183,7 +170,7 @@ public class HybridSort implements SortingAlgorithm {
 					merge(a, first, second, 0);
 
 				}
-				else if (rl.size() != 1) {
+				else {
 					if (rl.containsKey(p)) {
 						fL = p;
 						lL = rl.get(p);
