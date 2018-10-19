@@ -9,7 +9,7 @@ public class HybridSort implements SortingAlgorithm {
 		// for (int i : a) {
 		// 	System.out.println(i);
 		// }
-		int runsize = 3;
+		int runsize = 10;
 		hybrid(a, runsize);
 	}
 
